@@ -1,5 +1,5 @@
 {% set name = "nengo-dl" %}
-{% set version = "3.4.4" %}
+{% set version = "3.5.0" %}
 
 
 package:
@@ -8,7 +8,7 @@ package:
 
 source:
   url: https://pypi.io/packages/source/{{ name[0] }}/{{ name }}/nengo-dl-{{ version }}.tar.gz
-  sha256: d6e4d036a9e3ebdd6cee4cd65466ba1dade031964842fd7fdc15eefff766198d
+  sha256: 81e8e84c9ed771452cb2b04fbb323a6e43ddfb7f3fa1fa3d73e267cd4f32cfba
 
 build:
   number: 0
