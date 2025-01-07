@@ -1,0 +1,97 @@
+From 8466b46ef8e255f9e8a0d03b13350b84c5a5e44a Mon Sep 17 00:00:00 2001
+From: tawsif <sleeping4cat@outlook.com>
+Date: Wed, 17 Jul 2024 16:57:11 +0600
+Subject: [PATCH 1/4] Update compat.py
+
+---
+ nengo_dl/compat.py | 10 ++++++++--
+ 1 file changed, 8 insertions(+), 2 deletions(-)
+
+diff --git a/nengo_dl/compat.py b/nengo_dl/compat.py
+index 1e5a9638e..028d85351 100644
+--- a/nengo_dl/compat.py
++++ b/nengo_dl/compat.py
+@@ -77,9 +77,15 @@ def filter(self, record):
+         BatchNormalizationV1,
+         BatchNormalizationV2,
+     )
++elif version.parse(tf.__version__) >= version.parse("2.9.0"):
++    from tensorflow.python.keras.engine import Functional, _build_map
++    from tensorflow.python.keras.layers import (
++        BatchNormalizationV1,
++        BatchNormalizationV2,
++    )
+ else:
+-    from keras.engine.functional import Functional, _build_map
+-    from keras.layers import BatchNormalizationV1, BatchNormalizationV2
++    from keras.engine.functional import Functional, _build_map # this is deprecated
++    from keras.layers import BatchNormalizationV1, BatchNormalizationV2 # this is deprecated
+ 
+ if version.parse(tf.__version__) < version.parse("2.5.0rc0"):
+ 
+
+From 937cb48b53d110e5b3e22f7e720152999afce9d1 Mon Sep 17 00:00:00 2001
+From: tawsif <sleeping4cat@outlook.com>
+Date: Wed, 17 Jul 2024 17:00:35 +0600
+Subject: [PATCH 2/4] fixed importerror
+
+---
+ nengo_dl/compat.py | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/nengo_dl/compat.py b/nengo_dl/compat.py
+index 028d85351..eeb6833f9 100644
+--- a/nengo_dl/compat.py
++++ b/nengo_dl/compat.py
+@@ -78,7 +78,7 @@ def filter(self, record):
+         BatchNormalizationV2,
+     )
+ elif version.parse(tf.__version__) >= version.parse("2.9.0"):
+-    from tensorflow.python.keras.engine import Functional, _build_map
++    from tensorflow.python.keras.engine.functional import Functional, _build_map
+     from tensorflow.python.keras.layers import (
+         BatchNormalizationV1,
+         BatchNormalizationV2,
+
+From 019a824c2cc1b2f6ba0e61d145b07f91c40aa662 Mon Sep 17 00:00:00 2001
+From: tawsif <sleeping4cat@outlook.com>
+Date: Wed, 17 Jul 2024 17:06:26 +0600
+Subject: [PATCH 3/4] fixed batchnorm issue
+
+---
+ nengo_dl/compat.py | 5 +----
+ 1 file changed, 1 insertion(+), 4 deletions(-)
+
+diff --git a/nengo_dl/compat.py b/nengo_dl/compat.py
+index 1e5a9638e..92f4b16a8 100644
+--- a/nengo_dl/compat.py
++++ b/nengo_dl/compat.py
+@@ -77,9 +77,12 @@ def filter(self, record):
+         BatchNormalizationV1,
+         BatchNormalizationV2,
+     )
++elif version.parse(tf.__version__) >= version.parse("2.9.0"):
++    from tensorflow.python.keras.engine.functional import Functional, _build_map
++    from tensorflow.keras.layers import BatchNormalization
+ else:
+-    from keras.engine.functional import Functional, _build_map
+-    from keras.layers import BatchNormalizationV1, BatchNormalizationV2
++    from keras.engine.functional import Functional, _build_map # this is deprecated
++    from keras.layers import BatchNormalizationV1, BatchNormalizationV2 # this is deprecated
+ 
+ if version.parse(tf.__version__) < version.parse("2.5.0rc0"):
+ 
+diff --git a/nengo_dl/converter.py b/nengo_dl/converter.py
+index 6170d3bc9..6f551dc30 100644
+--- a/nengo_dl/converter.py
++++ b/nengo_dl/converter.py
+@@ -1141,8 +1141,7 @@ def convert(self, node_id):
+         return super().convert(node_id, dimensions=3)
+ 
+ 
+-@Converter.register(compat.BatchNormalizationV1)
+-@Converter.register(compat.BatchNormalizationV2)
++@Converter.register(compat.BatchNormalization)
+ class ConvertBatchNormalization(LayerConverter):
+     """Convert ``tf.keras.layers.BatchNormalization`` to Nengo objects."""
+
