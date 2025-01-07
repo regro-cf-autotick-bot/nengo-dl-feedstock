@@ -7,28 +7,30 @@ package:
   version: {{ version }}
 
 source:
-  url: https://pypi.io/packages/source/{{ name[0] }}/{{ name }}/nengo-dl-{{ version }}.tar.gz
+  url: https://pypi.org/packages/source/{{ name[0] }}/{{ name }}/nengo-dl-{{ version }}.tar.gz
   sha256: c0ca16c88196afc844a10d26d3e6a7c66b8e3a8f70d0dabbab4d08935735c975
 
 build:
-  number: 0
+  number: 1
   noarch: python
   script: {{ PYTHON }} -m pip install . -vv
 
 requirements:
   host:
     - pip
-    - python >=3.6
+    - python {{ python_min }}
   run:
     - jinja2
     - nengo >=3.0.0
     - numpy
     - packaging
     - progressbar2
-    - python >=3.6
+    - python >={{ python_min }}
     - tensorflow >=2.2.0
 
 test:
+  requires:
+    - python {{ python_min }}
   imports:
     - nengo_dl
     - nengo_dl.tests
