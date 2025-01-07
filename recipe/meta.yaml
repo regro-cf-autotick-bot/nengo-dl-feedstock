@@ -5,12 +5,12 @@
 package:
   name: {{ name|lower }}
   version: {{ version }}
-  patches:
-    - 237.patch
 
 source:
   url: https://pypi.org/packages/source/{{ name[0] }}/{{ name }}/nengo-dl-{{ version }}.tar.gz
   sha256: c0ca16c88196afc844a10d26d3e6a7c66b8e3a8f70d0dabbab4d08935735c975
+  patches:
+    - 237.patch
 
 build:
   number: 1
@@ -21,6 +21,7 @@ requirements:
   host:
     - pip
     - python {{ python_min }}
+    - setuptools
   run:
     - jinja2
     - nengo >=3.0.0
