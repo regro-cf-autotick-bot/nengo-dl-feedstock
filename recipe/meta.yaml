@@ -5,6 +5,8 @@
 package:
   name: {{ name|lower }}
   version: {{ version }}
+  patches:
+    - 237.patch
 
 source:
   url: https://pypi.org/packages/source/{{ name[0] }}/{{ name }}/nengo-dl-{{ version }}.tar.gz
